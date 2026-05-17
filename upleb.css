@@ -69,8 +69,18 @@ a:hover { color: var(--primary); }
 .upleb-nav-strip a:hover { color: var(--accent); }
 .upleb-nav-strip span.active { color: var(--fg-faint); cursor: default; }
 .upleb-nav-spacer { width: 80px; flex-shrink: 0; }
+.upleb-nav-github {
+  width: 80px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  color: var(--fg-muted);
+  transition: color 0.15s;
+}
+.upleb-nav-github:hover { color: var(--primary); }
 @media (max-width: 640px) {
   .upleb-nav-spacer { display: none; }
+  .upleb-nav-github { width: auto; }
   .upleb-nav-strip { gap: 10px; }
 }
 
