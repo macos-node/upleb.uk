@@ -1,0 +1,449 @@
+/* cgit dark theme — upleb.uk
+ * Palette: coral primary, amber accent, font-mono throughout.
+ * Card-based repo listing approximating the gitworkshop.dev dark look.
+ */
+
+:root {
+  --bg:           #0d1117;
+  --bg-elev:      #131d2a;
+  --bg-elev-2:    #1a2638;
+  --border:       #1e2d3d;
+  --border-soft:  #16202d;
+  --fg:           #c9d1d9;
+  --fg-muted:     #6b7a8d;
+  --fg-faint:     #4a5566;
+  --primary:      #FF7849;   /* coral */
+  --accent:       #FFB347;   /* amber */
+  --warn:         #fbbf24;
+  --code-bg:      #0a0f15;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--primary); }
+
+/* ── upleb nav strip injected via header directive ──────────────────────── */
+.upleb-nav {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+}
+.upleb-nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+/* cgit pages ARE upleb.uk, so the brand chip is the active-page indicator (coral). */
+.upleb-nav-brand {
+  font-size: 12px;
+  color: var(--primary);
+  cursor: default;
+  flex-shrink: 0;
+}
+.upleb-nav-strip {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.upleb-nav-strip a,
+.upleb-nav-strip span {
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.upleb-nav-strip a:hover { color: var(--accent); }
+.upleb-nav-strip span.active { color: var(--fg-faint); cursor: default; }
+.upleb-nav-spacer { width: 80px; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .upleb-nav-spacer { display: none; }
+  .upleb-nav-strip { gap: 10px; }
+}
+
+/* ── hero banner (echoes the React subdomains' title block) ─────────────── */
+.upleb-hero {
+  border-bottom: 1px solid var(--border);
+}
+.upleb-hero-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 24px;
+}
+
+@keyframes uplebLetterIn {
+  from { transform: translateX(-80px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+.upleb-title {
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: clamp(36px, 7.5vw, 51px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+.upleb-title .ch {
+  display: inline-block;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: uplebLetterIn 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* per-letter coral→amber gradient stops, lerped across the 8 chars of "upleb.uk" */
+.upleb-title .ch:nth-child(1) { background-image: linear-gradient(to right, #FF7849, #FF7F49); animation-delay:   0ms; }
+.upleb-title .ch:nth-child(2) { background-image: linear-gradient(to right, #FF7F49, #FF8748); animation-delay: 122ms; }
+.upleb-title .ch:nth-child(3) { background-image: linear-gradient(to right, #FF8748, #FF8E48); animation-delay: 244ms; }
+.upleb-title .ch:nth-child(4) { background-image: linear-gradient(to right, #FF8E48, #FF9648); animation-delay: 366ms; }
+.upleb-title .ch:nth-child(5) { background-image: linear-gradient(to right, #FF9648, #FF9D48); animation-delay: 488ms; }
+.upleb-title .ch:nth-child(6) { background-image: linear-gradient(to right, #FF9D48, #FFA448); animation-delay: 610ms; }
+.upleb-title .ch:nth-child(7) { background-image: linear-gradient(to right, #FFA448, #FFAC47); animation-delay: 732ms; }
+.upleb-title .ch:nth-child(8) { background-image: linear-gradient(to right, #FFAC47, #FFB347); animation-delay: 854ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .upleb-title .ch { animation: none; }
+}
+
+.upleb-strip {
+  height: 2px;
+  margin: 0 0 14px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  opacity: 0.85;
+}
+
+.upleb-tagline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.upleb-tagline a { color: var(--accent); }
+.upleb-tagline a:hover { color: var(--primary); }
+.upleb-flag {
+  display: inline-block;
+  height: 2px;
+  width: calc((100% - 60px) / 21);
+  background: var(--primary);
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+/* live-probed GRASP chip — revealed by JS only if git.upleb.uk advertises NIP-34 */
+.upleb-grasp {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 179, 71, 0.6);
+  color: var(--accent);
+  text-transform: uppercase;
+  transition: border-color 0.15s, background 0.15s;
+}
+.upleb-grasp:hover {
+  border-color: var(--accent);
+  background: rgba(255, 179, 71, 0.1);
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .upleb-hero-inner { padding: 24px 18px 20px; }
+  .upleb-tagline { font-size: 12px; gap: 10px; }
+}
+
+/* ── cgit's wrapper ─────────────────────────────────────────────────────── */
+#cgit {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+@media (max-width: 720px) {
+  #cgit { padding: 28px 28px 40px; }   /* a touch more breathing room from the screen edges */
+}
+
+/* Hide cgit's auto-generated logo/title bar — our header fragment owns the chrome */
+#cgit > table#header { display: none; }
+
+/* ── repo header (on per-repo pages) ────────────────────────────────────── */
+table.tabs {
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+  margin: 0 0 24px 0;
+}
+table.tabs td { padding: 0; vertical-align: middle; }
+table.tabs td a {
+  display: inline-block;
+  padding: 10px 14px;
+  color: var(--fg-muted);
+  font-size: 12px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+table.tabs td a:hover { color: var(--accent); }
+table.tabs td a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+table.tabs td.form { float: right; padding: 8px 0; }
+table.tabs input[type=text],
+table.tabs input[type=search] {
+  background: var(--bg-elev);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  border-radius: 4px;
+}
+table.tabs input[type=submit] {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+table.tabs input[type=submit]:hover { filter: brightness(1.15); }
+
+/* ── content wrapper ────────────────────────────────────────────────────── */
+.content { padding: 0; }
+
+/* ── "Repos" section label, only on the root index ──────────────────────── */
+/* cgit renders <table class="tabs"> on every page (the root has just an
+ * "index" tab); to single out the root index, look for a tab with href="/".
+ * The flag bar is painted as a single-line background-image sized to
+ * (width-60px)/21 — the same fractional unit the React subdomains use. */
+#cgit:has(table.tabs a.active[href="/"]) > .content::before {
+  content: "Repos";
+  display: block;
+  margin: 0 0 12px;
+  padding-left: calc((100% - 60px) / 21 + 12px);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  background-image: linear-gradient(to right, rgba(255, 120, 73, 0.5), rgba(255, 120, 73, 0.5));
+  background-repeat: no-repeat;
+  background-size: calc((100% - 60px) / 21) 2px;
+  background-position: left center;
+  line-height: 14px;
+}
+
+/* ── repo INDEX page — table.list as cards ──────────────────────────────── */
+table.list {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  margin: 0;
+}
+
+table.list tr.nohover { display: none; }   /* hide column header row */
+
+/* cgit emits 5 cells per row: name, description, owner (empty), age, buttons.
+ * Desktop: two-row grid — name spans the row alongside age + actions, desc fills below.
+ * Mobile  (<720px): single column, everything stacks (name, desc, age, actions). */
+table.list tr {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "name age actions"
+    "desc desc desc";
+  column-gap: 16px;
+  row-gap: 6px;
+  align-items: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+table.list tr:last-child { margin-bottom: 0; }
+table.list tr:hover { border-color: var(--primary); }
+
+table.list td {
+  padding: 0;
+  border: none;
+  background: transparent;
+  vertical-align: middle;
+  min-width: 0;   /* let cells shrink so long npubs ellipsize instead of forcing overflow */
+}
+
+table.list td.toplevel-repo { grid-area: name; }
+table.list td:nth-child(2)  { grid-area: desc; }
+table.list td:nth-child(3)  { display: none; }    /* owner column — empty for all current repos */
+table.list td:nth-child(4)  { grid-area: age; }
+table.list td:nth-child(5)  { grid-area: actions; }
+
+table.list td.toplevel-repo a {
+  font-size: 14px;
+  color: var(--fg);
+  font-weight: 600;
+  word-break: break-all;
+}
+table.list td.toplevel-repo a:hover { color: var(--accent); }
+
+table.list td:nth-child(2) {
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+table.list td:nth-child(2) a {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+table.list td:nth-child(2) a:hover { color: var(--accent); }
+
+table.list td:nth-child(4) {
+  font-size: 11px;
+  color: var(--fg-faint);
+  text-align: right;
+  white-space: nowrap;
+}
+
+table.list td:nth-child(5) {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  table.list tr {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "name"
+      "desc"
+      "age"
+      "actions";
+    row-gap: 8px;
+  }
+  table.list td:nth-child(4) { text-align: left; }
+  table.list td:nth-child(5) { justify-content: flex-start; }
+
+  /* On mobile the npub is abbreviated by inline JS in upleb-header.html,
+   * which leaves room to bump the card's text up a notch for readability. */
+  table.list td.toplevel-repo a   { font-size: 16px; }
+  table.list td:nth-child(2),
+  table.list td:nth-child(2) a    { font-size: 14px; }
+}
+
+/* button-style action links (summary / log / tree) */
+.button, a.button {
+  display: inline-block;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--fg-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  font-weight: normal;
+  transition: all 0.15s;
+}
+.button:hover, a.button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 179, 71, 0.05);
+}
+
+/* ── search/sort headers ────────────────────────────────────────────────── */
+th { color: var(--fg-faint); font-weight: normal; font-size: 11px; padding: 8px 0; text-align: left; }
+th a { color: var(--fg-faint); }
+
+/* ── per-repo summary / log / tree / blob views ─────────────────────────── */
+table.commit-info, table.blob, table.diff, table.list.commitGraph {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  border-collapse: collapse;
+  background: var(--bg-elev);
+  margin: 12px 0;
+  font-size: 12px;
+}
+table.commit-info td, table.commit-info th,
+table.list.commitGraph td, table.list.commitGraph th {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-soft);
+}
+table.commit-info tr:last-child td,
+table.list.commitGraph tr:last-child td { border-bottom: none; }
+
+/* tree / log / refs lists */
+table.list.commitGraph tr.nohover,
+table.list.commitGraph .nohover { display: table-row; background: var(--bg-elev-2); }
+table.list.commitGraph tr {
+  display: table-row;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+table.list.commitGraph tr:hover { background: var(--bg-elev-2); }
+
+/* code blocks / blob view */
+pre, table.blob, table.blob td.lines pre {
+  background: var(--code-bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 12px;
+  border-radius: 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+  border: none;
+}
+table.blob td.linenumbers { background: var(--bg-elev-2); color: var(--fg-faint); padding-right: 12px; user-select: none; }
+table.blob td.linenumbers pre { background: transparent; padding: 0; color: var(--fg-faint); }
+
+/* generic table body */
+td { border-color: var(--border-soft); color: var(--fg); }
+
+/* commit summaries */
+.commit-subject, .object-header {
+  color: var(--fg);
+  font-weight: 600;
+}
+.commit-msg { color: var(--fg-muted); white-space: pre-wrap; }
+
+/* refs */
+.deco { display: inline-block; padding: 2px 6px; margin: 0 4px; font-size: 10px; border-radius: 3px; border: 1px solid var(--border); color: var(--accent); }
+
+/* diff view colours */
+.add  { color: #4ade80; background: rgba(74, 222, 128, 0.06); }
+.del  { color: #f87171; background: rgba(248, 113, 113, 0.06); }
+.hunk { color: var(--accent); background: var(--bg-elev-2); }
+
+/* ── footer ─────────────────────────────────────────────────────────────── */
+.footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--fg-faint);
+  font-size: 11px;
+  text-align: center;
+}
+.footer a { color: var(--fg-faint); }
+.footer a:hover { color: var(--accent); }

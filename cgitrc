@@ -1,0 +1,65 @@
+# cgitrc — /etc/cgitrc on the server
+# See: man cgitrc(5)
+
+# ── UI ─────────────────────────────────────────────────────────────
+virtual-root=/
+css=/cgit-css/upleb.css
+favicon=/cgit-css/favicon.ico
+
+# Inject extra <head> tags: SVG favicon (modern browsers) + theme-color
+head-include=/usr/share/cgit/upleb-head-include.html
+
+# upleb nav strip injected at top of every page
+header=/usr/share/cgit/upleb-header.html
+
+# Hide the cgit logo (our header fragment owns the chrome)
+logo=
+
+root-title=upleb.uk — git via nostr
+root-desc=FOSS repositories hosted on git.upleb.uk (NIP-34 / GRASP)
+
+# ── Repo discovery ────────────────────────────────────────────────
+# Strip ".git" from displayed repo names + URLs.
+# MUST come before scan-path — scan-path triggers the actual scan,
+# and remove-suffix only applies to repos discovered after it's set.
+remove-suffix=1
+
+# ngit-grasp creates bare repos here as <npub>/<name>.git (post-cutover 2026-05-08).
+# Pre-cutover this was /opt/ngit-relay/volumes/repos/ — that path is now frozen
+# (container stopped) and kept around only for rollback.
+# scan-path recurses, so cgit discovers any new repo automatically.
+scan-path=/opt/ngit-grasp/data/git/
+
+# ── Features ──────────────────────────────────────────────────────
+enable-index-links=1
+enable-commit-graph=1
+enable-log-filecount=1
+enable-log-linecount=1
+enable-blame=1
+enable-tree-linenumbers=1
+enable-html-serving=0
+enable-git-config=1
+
+# Snapshot formats users can download
+snapshots=tar.gz tar.bz2 zip
+
+# ── Display options ───────────────────────────────────────────────
+max-stats=year
+max-repo-count=200
+max-commit-count=100
+side-by-side-diffs=1
+case-sensitive-sort=1
+
+# ── Cache ─────────────────────────────────────────────────────────
+# 5 minutes for index, repo summary, etc.; longer for snapshots
+cache-size=1000
+cache-root=/var/cache/cgit
+cache-dynamic-ttl=5
+cache-static-ttl=-1
+cache-repo-ttl=5
+cache-root-ttl=15
+cache-scanrc-ttl=15
+cache-snapshot-ttl=5
+
+# ── Robots ────────────────────────────────────────────────────────
+robots=noindex, nofollow

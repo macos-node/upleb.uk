@@ -1,0 +1,12 @@
+#!/bin/sh
+# cgit Idle column source — written on every push so cgit's "Idle" column
+# reflects the time of the most recent push to this bare repo.
+#
+# cgit's get_repo_modtime() (ui-repolist.c) reads the FIRST LINE of
+# info/web/last-modified and parses it as an RFC2822 date — the file's
+# mtime is NOT what's used. Without a parseable date here, cgit falls
+# back to the mtime of refs/heads/master, which is wrong for any repo
+# whose default branch isn't called "master".
+mkdir -p info/web
+date -u -R > info/web/last-modified
+exit 0

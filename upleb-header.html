@@ -1,0 +1,73 @@
+<nav class="upleb-nav">
+  <div class="upleb-nav-inner">
+    <span class="upleb-nav-brand">upleb</span>
+    <div class="upleb-nav-strip">
+      <a href="https://blst.upleb.uk">blst</a>
+      <a href="https://fx.upleb.uk">fx</a>
+      <a href="https://glmps.upleb.uk">glmps</a>
+      <a href="https://npub.upleb.uk">npub</a>
+      <a href="https://pls.upleb.uk">pls</a>
+      <a href="https://smpl.upleb.uk">smpl</a>
+      <a href="https://trth.upleb.uk">trth</a>
+    </div>
+    <span class="upleb-nav-spacer"></span>
+  </div>
+</nav>
+
+<section class="upleb-hero" aria-label="upleb.uk">
+  <div class="upleb-hero-inner">
+    <h1 class="upleb-title" aria-label="upleb.uk">
+      <span class="ch">u</span><span class="ch">p</span><span class="ch">l</span><span class="ch">e</span><span class="ch">b</span><span class="ch ch-dot">.</span><span class="ch">u</span><span class="ch">k</span>
+    </h1>
+    <div class="upleb-strip" aria-hidden="true"></div>
+    <p class="upleb-tagline">
+      <span class="upleb-flag" aria-hidden="true"></span>
+      <span>Public git repos &mdash; served from a NIP-34 GRASP relay at <a href="https://git.upleb.uk">git.upleb.uk</a></span>
+      <a class="upleb-grasp" href="https://github.com/nostr-protocol/nips/blob/master/34.md"
+         target="_blank" rel="noopener noreferrer"
+         title="GRASP &mdash; relay accepts NIP-34 git events" hidden>GRASP</a>
+    </p>
+  </div>
+</section>
+
+<script>
+(function() {
+  var MQ = window.matchMedia('(max-width: 720px)');
+  function abbrev(t) {
+    var m = t.match(/^(npub1)([a-z0-9]+)(\/.+)?$/i);
+    if (!m || m[2].length <= 10) return t;
+    return m[1] + m[2].slice(0, 4) + '…' + m[2].slice(-4) + (m[3] || '');
+  }
+  function apply() {
+    var small = MQ.matches;
+    document.querySelectorAll('td.toplevel-repo a').forEach(function(a) {
+      if (!a.dataset.full) a.dataset.full = a.textContent.trim();
+      a.textContent = small ? abbrev(a.dataset.full) : a.dataset.full;
+    });
+  }
+  function init() {
+    apply();
+    if (MQ.addEventListener) MQ.addEventListener('change', apply);
+    else if (MQ.addListener) MQ.addListener(apply);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+// GRASP chip — reveal only if git.upleb.uk's NIP-11 doc advertises NIP-34.
+(function() {
+  var el = document.querySelector('.upleb-grasp');
+  if (!el) return;
+  fetch('https://git.upleb.uk', {
+    headers: { Accept: 'application/nostr+json' },
+    signal: AbortSignal.timeout(8000)
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(info) {
+      if (info && Array.isArray(info.supported_nips) && info.supported_nips.indexOf(34) !== -1) {
+        el.hidden = false;
+      }
+    })
+    .catch(function() {});
+})();
+</script>
