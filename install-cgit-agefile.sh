@@ -24,7 +24,7 @@ HOOK_SRC=/usr/local/share/upleb/cgit-post-receive   # populated by the deploy st
 
 if [ ! -r "$HOOK_SRC" ]; then
     echo "error: hook source not found at $HOOK_SRC" >&2
-    echo "       scp ~/code_upleb/upleb.uk/cgit-post-receive root@server:$HOOK_SRC first" >&2
+    echo "       scp ~/code_gh/macos-node/upleb.uk/cgit-post-receive root@server:$HOOK_SRC first" >&2
     exit 1
 fi
 
