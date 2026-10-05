@@ -22,13 +22,17 @@ _No dev server — edit the CSS/HTML directly and re-deploy._
 
 ## Build + deploy
 
+There is no deploy script: the files go to paths only root can write, root
+login is off, and `sudo` asks for a password. Copy them to the deploy user's
+home, then install them on the server (`upleb.uk` is an SSH host alias):
+
 ```bash
-scp -P 2121 upleb.css upleb-header.html upleb-head-include.html favicon.ico favicon.svg \
-  root@45.154.199.154:/usr/share/cgit/
-scp -P 2121 cgitrc root@45.154.199.154:/etc/cgitrc
-ssh -p 2121 root@45.154.199.154 'find /var/cache/cgit -mindepth 1 -delete'
+scp upleb.css upleb-header.html upleb-head-include.html favicon.ico favicon.svg cgitrc upleb.uk:
+ssh -t upleb.uk 'sudo install -m 644 upleb.css upleb-header.html upleb-head-include.html favicon.ico favicon.svg /usr/share/cgit/ \
+  && sudo install -m 644 cgitrc /etc/cgitrc \
+  && sudo find /var/cache/cgit -mindepth 1 -delete'
 ```
 
 > `cgitrc` lives at `/etc/cgitrc`, everything else at `/usr/share/cgit/`. cgit reads its files on the next request — no nginx reload needed; clear `/var/cache/cgit` so changes show immediately.
 
-VPS: `45.154.199.154`. Full server / nginx / SSL / DNS notes for the wider deployment live in the local `code_gh/macos-node/CLAUDE.md` (not pushed; this README is the public-facing summary).
+Server addresses and the nginx / SSL / DNS notes for the wider deployment live in the local `code_gh/macos-node/CLAUDE.md` (not pushed; this README is the public-facing summary).
